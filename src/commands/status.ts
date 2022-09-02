@@ -28,7 +28,7 @@ export default class StatusCommand extends Command {
             .setCustomId("primary")
             .setLabel("View on GitHub")
             .setStyle(ButtonStyle.Primary)
-            .setURL("");
+            .setURL("https://github.com/Auxority/galaxy-life-bot");
 
         interaction.reply({
             embeds: [
