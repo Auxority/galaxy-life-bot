@@ -1,4 +1,4 @@
-import { CommandInteraction, EmbedBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import { CommandInteraction, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import fetch from "node-fetch";
 import Command from "./Command.js";
 
@@ -24,11 +24,13 @@ export default class StatusCommand extends Command {
     public async run(interaction: CommandInteraction): Promise<void> {
         await this.updatePing();
 
-        const button = new ButtonBuilder()
-            .setCustomId("primary")
-            .setLabel("View on GitHub")
-            .setStyle(ButtonStyle.Primary)
-            .setURL("https://github.com/Auxority/galaxy-life-bot");
+        const row: any = new ActionRowBuilder()
+            .addComponents(
+                new ButtonBuilder()
+                    .setLabel("View on GitHub")
+                    .setStyle(ButtonStyle.Link)
+                    .setURL("https://github.com/Auxority/galaxy-life-bot")
+            );
 
         interaction.reply({
             embeds: [
@@ -37,12 +39,20 @@ export default class StatusCommand extends Command {
                     .setTitle("Server status")
                     .setDescription(this.generateDescription())
             ],
+            components: [row],
             ephemeral: true
         });
     }
 
     private generateDescription(): string {
-        return `Ping: ${this._ping}ms\nStatus: ${this.statusToMessage()}`;
+        return `Ping: ${this.formatNumber(this._ping)}ms\nStatus: ${this.statusToMessage()}`;
+    }
+
+    private formatNumber(value: number, fractionDigits: number = 0, roundNearest: number = 1): string {
+        const power = Math.pow(10, fractionDigits);
+        return String(
+            Math.round(value * power / roundNearest) / power * roundNearest
+        );
     }
 
     private statusToMessage(): string {
