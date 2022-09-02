@@ -1,0 +1,24 @@
+{
+  "name": "galaxy-life-bot",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "A galaxy life discord bot",
+  "main": "build/index.js",
+  "repository": "https://github.com/Auxority/galaxy-life-bot",
+  "author": "Auxority",
+  "license": "MIT",
+  "scripts": {
+    "start": "tsc && node .",
+    "deploy": "tsc && node build/deploy-commands.js"
+  },
+  "dependencies": {
+    "@discordjs/rest": "^1.1.0",
+    "discord.js": "^14.3.0",
+    "dotenv": "^16.0.2",
+    "node-fetch": "^3.2.10"
+  },
+  "devDependencies": {
+    "@types/node": "^18.7.14",
+    "typescript": "^4.8.0-beta"
+  }
+}
