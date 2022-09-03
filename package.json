@@ -9,7 +9,7 @@
   "license": "MIT",
   "scripts": {
     "start": "tsc && node .",
-    "deploy": "tsc && node build/deploy-commands.js"
+    "deploy": "tsc && node build/deploy-commands.js && node ."
   },
   "dependencies": {
     "@discordjs/rest": "^1.1.0",
