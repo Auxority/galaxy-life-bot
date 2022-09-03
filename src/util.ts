@@ -6,4 +6,11 @@ export default class Util {
         rawFiles.splice(rawFiles.indexOf("Command.ts"), 1);
         return rawFiles.map((file) => file.replace(".ts", ".js"));
     }
+
+    public static formatNumber(value: number, fractionDigits: number = 0, roundNearest: number = 1): string {
+        const power = Math.pow(10, fractionDigits);
+        return String(
+            Math.round(value * power / roundNearest) / power * roundNearest
+        );
+    }
 }

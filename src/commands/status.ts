@@ -1,36 +1,22 @@
 import { CommandInteraction, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
-import fetch from "node-fetch";
 import Command from "./Command.js";
+import GalaxyPinger from "../pingers/GalaxyPinger.js";
 
 export default class StatusCommand extends Command {
     protected _name = "status";
     protected _title = "Status";
     protected _description = "Gets the status of the galaxy life servers.";
-
-    private static readonly MASTER_URL = "https://game.galaxylifegame.net/director/getMaster";
-    private _start: number;
-    private _ping: number;
-    private _serverUrl: string;
-    private _serverStatus: number;
+    private _galaxyPinger: GalaxyPinger;
 
     public constructor() {
         super();
-        this._start = 0;
-        this._ping = -1;
-        this._serverUrl = "";
-        this._serverStatus = -1;
+        this._galaxyPinger = new GalaxyPinger();
     }
 
     public async run(interaction: CommandInteraction): Promise<void> {
-        await this.updatePing();
+        await this._galaxyPinger.run();
 
-        const row: any = new ActionRowBuilder()
-            .addComponents(
-                new ButtonBuilder()
-                    .setLabel("View on GitHub")
-                    .setStyle(ButtonStyle.Link)
-                    .setURL("https://github.com/Auxority/galaxy-life-bot")
-            );
+        const row = this.createActionRow();
 
         interaction.reply({
             embeds: [
@@ -44,8 +30,22 @@ export default class StatusCommand extends Command {
         });
     }
 
+    private createActionRow(): any {
+        return new ActionRowBuilder()
+            .addComponents(
+                this.createGitHubButton()
+            );
+    }
+
+    private createGitHubButton(): ButtonBuilder {
+        return new ButtonBuilder()
+            .setLabel("View on GitHub")
+            .setStyle(ButtonStyle.Link)
+            .setURL("https://github.com/Auxority/galaxy-life-bot");
+    }
+
     private generateDescription(): string {
-        return `Ping: ${this.formatNumber(this._ping)}ms\nStatus: ${this.statusToMessage()}`;
+        return `Ping: ${this.formatNumber(this._galaxyPinger.ping)}ms\nStatus: ${this.statusToMessage()}`;
     }
 
     private formatNumber(value: number, fractionDigits: number = 0, roundNearest: number = 1): string {
@@ -56,28 +56,13 @@ export default class StatusCommand extends Command {
     }
 
     private statusToMessage(): string {
-        if (this._serverStatus === 200) {
-            return "Online";
-        } else if (this._serverStatus === 504) {
-            return "Maintenance";
+        switch (this._galaxyPinger.serverStatus) {
+            case 404:
+                return "Online";
+            case 504:
+                return "Maintenance";
+            default:
+                return "Offline";
         }
-        return "Offline";
-    }
-
-    private async updatePing(): Promise<void> {
-        this._serverUrl = await this.getServerUrl();
-        this._start = performance.now();
-        await this.updateServerStatus();
-        this._ping = performance.now() - this._start;
-    }
-
-    private async updateServerStatus(): Promise<void> {
-        const res = await fetch(this._serverUrl);
-        this._serverStatus = res.status;
-    }
-
-    private async getServerUrl(): Promise<string> {
-        const res = await fetch(StatusCommand.MASTER_URL);
-        return await res.text();
     }
 }
