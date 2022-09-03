@@ -21,13 +21,24 @@ export default class StatusCommand extends Command {
         interaction.reply({
             embeds: [
                 new EmbedBuilder()
-                    .setColor(0x0099FF)
+                    .setColor(this.getStatusColor())
                     .setTitle("Server status")
                     .setDescription(this.generateDescription())
             ],
             components: [row],
             ephemeral: true
         });
+    }
+
+    private getStatusColor(): number {
+        switch (this._galaxyPinger.serverStatus) {
+            case 404:
+                return 0x00FF00;
+            case 504:
+                return 0xFFFF00;
+            default:
+                return 0xFF0000;
+        }
     }
 
     private createActionRow(): any {
