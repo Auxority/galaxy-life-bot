@@ -14,7 +14,7 @@ Well then, how do you use this bot?
 ![](https://cdn.discordapp.com/attachments/302318511764799488/1015524569731317870/unknown.png)
 
 3. Use the git clone command to copy this repository.
-`git clone https://github.com/Auxority/galaxy-life-bot.git`
+`git clone https://github.com/Auxority/galaxy-life-bot`
 
 ![](https://cdn.discordapp.com/attachments/302318511764799488/1015524882559283210/unknown.png)
 
