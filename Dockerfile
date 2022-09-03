@@ -17,4 +17,4 @@ ENV GUILD_ID=${GUILD_ID}
 ARG BOT_TOKEN
 ENV BOT_TOKEN=${BOT_TOKEN}
 
-CMD [ "npm", "deploy" ]
+CMD [ "npm", "run", "deploy" ]
